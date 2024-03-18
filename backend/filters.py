@@ -44,7 +44,7 @@ def filter_small_images(crop_list, min_height=35):
     return filtered_crops
 
 
-def appropriate_size_filter(image, target_width=804):
+def appropriate_size_filter(image, max_width=804, min_width=690):
     '''
     This function resizes an image to a target width if its width is greater than the target width.
     :param image:
@@ -52,9 +52,14 @@ def appropriate_size_filter(image, target_width=804):
     :return:
     '''
     (h, w) = image.shape[:2]
-    if w < target_width:
+    if max_width > w > min_width:
         return image
-
+    if w > max_width:
+        target_width = max_width
+    elif w < min_width:
+        target_width = min_width
+    else:
+        raise ValueError('Image width is not within the specified range')
     ratio = target_width / float(w)
 
     # Calculate the new height based on the aspect ratio
@@ -65,7 +70,7 @@ def appropriate_size_filter(image, target_width=804):
     return resized_image
 
 
-def remove_border_if_exists_filter(image, offset=5):
+def remove_border_if_exists_filter(image, offset=7):
     """
     This function checks if an image has a border and removes it if it exists.
     It first converts the image to grayscale and then to binary.
@@ -96,9 +101,12 @@ def remove_border_if_exists_filter(image, offset=5):
     rx, ry, rw, rh = cv2.boundingRect(rightmost_contour)
 
     if lx == 0 and lx + lw == image.shape[1]:  # Check for left border
+        print('no left border')
         return image
     elif rx == 0 and rx + rw == image.shape[1]:  # Check for right border
+        print('no right border')
         return image
     else:
+        print('border detected')
         cropped_image = image[:, max(lx + offset, 0):min(rx + rw - offset, image.shape[1])]
         return cropped_image

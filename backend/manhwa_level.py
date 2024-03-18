@@ -33,7 +33,8 @@ def get_y_coordinate_end(height, image_array, y_coordinate_start, steps=5, offse
     :return:
     '''
     for y in range(y_coordinate_start, height, steps):
-        first_pixel_color = image_array[y, 0]
+        border_no_detect_threshold = 2
+        first_pixel_color = image_array[y, border_no_detect_threshold]
         upper_bounds = []
         lower_bounds = []
 

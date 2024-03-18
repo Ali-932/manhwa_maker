@@ -1,9 +1,9 @@
 import numpy as np
 import cv2
 
-from filters import *
-from manhwa_level import manhwa_level_image_crop_calculator
-from print_level import print_level_image_crop_calculator
+from backend.filters import *
+from backend.manhwa_level import manhwa_level_image_crop_calculator
+from backend.print_level import print_level_image_crop_calculator
 
 
 def get_image_attributes(image):
@@ -67,11 +67,10 @@ def crop_and_collect_images(image_paths: list, column_height):
         for crop in print_crop_list:
             cropped_img = image[crop[0]:crop[1], 0:image.shape[1]]
             cropped_images.append(cropped_img)
-
     return cropped_images
 
 
-def place_images_on_canvas(cropped_images, column_height):
+def place_images_on_canvas(cropped_images, column_height, margin=60):
     """
     This function places the cropped images on a canvas
     the canvas is A5 paper size, and split into 2 columns, each with a height length of 2360
@@ -81,6 +80,8 @@ def place_images_on_canvas(cropped_images, column_height):
     """
     full_image = np.ones((int(2480), int(3508 / 2), 3), dtype=np.uint8) * 255
     start_x, start_y = 950, 60
+    # we add the margin to the column height to make sure the images are not too close to the edge
+    column_height += margin
     current_x, current_y = start_x, start_y
     images_placed = []
     for index, img in enumerate(cropped_images):
