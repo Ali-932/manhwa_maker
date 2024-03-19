@@ -13,8 +13,6 @@ class ManageFrame(ctk.CTkFrame):
         self.ImageList = []
         self.step_size = 0
         main_label = ctk.CTkLabel(self, text="Manhwa Maker", font=("Comic Sans MS", 25))
-        frame_width = int(self.winfo_reqwidth())
-        frame_height = int(self.winfo_reqheight())
         main_label.place(x=120, y=120)
         # use text_var.set("1") to update the value
         self.TextVar = ctk.StringVar(value="No Images ")
