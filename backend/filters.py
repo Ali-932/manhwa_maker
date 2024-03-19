@@ -101,12 +101,9 @@ def remove_border_if_exists_filter(image, offset=7):
     rx, ry, rw, rh = cv2.boundingRect(rightmost_contour)
 
     if lx == 0 and lx + lw == image.shape[1]:  # Check for left border
-        print('no left border')
         return image
     elif rx == 0 and rx + rw == image.shape[1]:  # Check for right border
-        print('no right border')
         return image
     else:
-        print('border detected')
         cropped_image = image[:, max(lx + offset, 0):min(rx + rw - offset, image.shape[1])]
         return cropped_image

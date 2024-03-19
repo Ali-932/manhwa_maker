@@ -13,20 +13,13 @@ def manage_images(image_paths: list, column_height=2300):
     )
 
 
-def make_pdf(file_path, images: list):
-    if not images:
-        # show_error('No images selected', title='zero_error', alert=False, parent=None)
-        return 0
-    done_event = threading.Event()
-    threading.Thread(target=pdfmaker_thread, args=(file_path, images, done_event)).start()
-    done_event.wait()
-
-
-def pdfmaker_thread(file_path, images, done_event):
-    if pillow_images := [
-        Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-        for image in images
-    ]:
+def pdfmaker_thread(file_path, images, callback, progress_callback):
+    if images:
+        pillow_images = []
+        for image in images:
+            pillow_images.append(Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+                                 )
+            progress_callback()
         first_image = pillow_images[0]
         pillow_images = pillow_images[1:]
 
@@ -38,7 +31,7 @@ def pdfmaker_thread(file_path, images, done_event):
             append_images=pillow_images,
             optimize=True,
         )
-    done_event.set()
+    callback()
 
 
 '''
