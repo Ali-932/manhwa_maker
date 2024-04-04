@@ -78,8 +78,8 @@ def place_images_on_canvas(cropped_images, column_height, margin=60):
     :param cropped_images:
     :return:
     """
-    full_image = np.ones((int(2480), int(3508 / 2), 3), dtype=np.uint8) * 255
-    start_x, start_y = 950, 60
+    full_image = np.ones((int(2480), 1754, 3), dtype=np.uint8) * 255
+    start_x, start_y = 875, 60
     # we add the margin to the column height to make sure the images are not too close to the edge
     column_height += margin
     current_x, current_y = start_x, start_y
@@ -89,13 +89,30 @@ def place_images_on_canvas(cropped_images, column_height, margin=60):
         full_image[current_y:current_y + h, current_x:current_x + w] = img
         current_y += h
         if current_y == column_height:
-            if current_x == 950:
+            if current_x == 875:
                 current_x, current_y = 130, start_y
-                current_x = 130
-            elif current_x == 130:
+                current_x = 10
+            elif current_x == 10:
                 images_placed.append(full_image)
                 current_x, current_y = start_x, start_y
-                full_image = np.ones((int(2480), int(3508 / 2), 3), dtype=np.uint8) * 255
+                full_image = np.ones((int(2480), 1754, 3), dtype=np.uint8) * 255
         if index == len(cropped_images) - 1:
             images_placed.append(full_image)
     return images_placed
+
+
+def add_margin_for_canvas(images: list) -> list:
+    """
+    This function adds a margin to the images to make sure they are not too close to the edge of the canvas
+    :param images:
+    :return:
+    """
+    margin = 100
+
+    for index, img in enumerate(images):
+        if index % 2 == 0:
+            img = cv2.copyMakeBorder(img, 0, 0, margin, 0, cv2.BORDER_CONSTANT, value=[255, 255, 255])
+        else:
+            img = cv2.copyMakeBorder(img, 0, 0, 0, margin, cv2.BORDER_CONSTANT, value=[255, 255, 255])
+        images[index] = img
+    return images

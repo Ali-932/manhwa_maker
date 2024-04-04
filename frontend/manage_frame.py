@@ -12,6 +12,8 @@ class ManageFrame(ctk.CTkFrame):
         super().__init__(master=master, **kw)
         self.ImageList = []
         self.step_size = 0
+        self.images_last_open_directory = None
+        self.pdf_last_open_directory = None
         main_label = ctk.CTkLabel(self, text="Manhwa Maker", font=("Comic Sans MS", 25))
         main_label.place(x=120, y=120)
         # use text_var.set("1") to update the value
@@ -75,7 +77,12 @@ class ManageFrame(ctk.CTkFrame):
         self.disable_buttons()
 
         if file_path is None:
-            file_path = filedialog.askopenfilenames()
+            if self.images_last_open_directory is None:
+                file_path = filedialog.askopenfilenames()
+            else:
+                file_path = filedialog.askopenfilenames(initialdir=self.images_last_open_directory)
+            if file_path:
+                self.images_last_open_directory = '/'.join(file_path[0].split('/')[:-1])
             threading.Thread(target=self.manage_and_extend_images, args=(list(file_path),)).start()
 
     def add_image_folder(self):
@@ -101,9 +108,16 @@ class ManageFrame(ctk.CTkFrame):
 
     def make_pdf(self):
         if self.ImageList:
-            if file_path := filedialog.asksaveasfilename(
+            if self.pdf_last_open_directory is None:
+                file_path = filedialog.asksaveasfilename(
                     defaultextension=".pdf", filetypes=[("PDF file", "*.pdf")]
-            ):
+                )
+            else:
+                file_path = filedialog.asksaveasfilename(
+                    defaultextension=".pdf", filetypes=[("PDF file", "*.pdf")], initialdir=self.pdf_last_open_directory
+                )
+            if file_path:
+                self.pdf_last_open_directory = '/'.join(file_path[0].split('/')[:-1])
                 self.disable_buttons()
                 threading.Thread(target=pdfmaker_thread,
                                  args=(file_path, self.ImageList, self.pdf_saved_callback,
