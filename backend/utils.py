@@ -67,7 +67,6 @@ def crop_and_collect_images(image_paths: list, column_height):
         for crop in print_crop_list:
             cropped_img = image[crop[0]:crop[1], 0:image.shape[1]]
             cropped_images.append(cropped_img)
-            cv2.imwrite(f"cropped_{image_path.split('/')[-1]}", cropped_img)
     return cropped_images
 
 

@@ -108,5 +108,4 @@ def remove_border_if_exists_filter(image, offset=7):
     if lx == 0 and lx + lw == image.shape[1] and rx == 0 and rx+rw == image.shape[1]:
         return image
     cropped_image = image[:, max(lx + offset_left, 0):min(rx + rw - offset_right, image.shape[1])]
-    cv2.imwrite("cropped_image.jpg", cropped_image)
     return cropped_image
