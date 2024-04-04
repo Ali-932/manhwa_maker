@@ -45,6 +45,7 @@ def filter_small_images(crop_list, min_height=35):
 
 
 def appropriate_size_filter(image, max_width=804, min_width=690):
+    # sourcery skip: assign-if-exp, remove-redundant-if
     '''
     This function resizes an image to a target width if its width is greater than the target width.
     :param image:
@@ -52,7 +53,7 @@ def appropriate_size_filter(image, max_width=804, min_width=690):
     :return:
     '''
     (h, w) = image.shape[:2]
-    if max_width > w > min_width:
+    if max_width >= w >= min_width:
         return image
     if w > max_width:
         target_width = max_width
@@ -97,13 +98,15 @@ def remove_border_if_exists_filter(image, offset=7):
     leftmost_contour = min(contours, key=lambda c: c[:, 0, 0].min())
     rightmost_contour = max(contours, key=lambda c: c[:, 0, 0].max())
 
+    offset_left, offset_right = offset, offset
     lx, ly, lw, lh = cv2.boundingRect(leftmost_contour)
     rx, ry, rw, rh = cv2.boundingRect(rightmost_contour)
-
     if lx == 0 and lx + lw == image.shape[1]:  # Check for left border
+        offset_left = 0
+    if rx == 0 and rx + rw == image.shape[1]:  # Check for right border
+        offset_right = 0
+    if lx == 0 and lx + lw == image.shape[1] and rx == 0 and rx+rw == image.shape[1]:
         return image
-    elif rx == 0 and rx + rw == image.shape[1]:  # Check for right border
-        return image
-    else:
-        cropped_image = image[:, max(lx + offset, 0):min(rx + rw - offset, image.shape[1])]
-        return cropped_image
+    cropped_image = image[:, max(lx + offset_left, 0):min(rx + rw - offset_right, image.shape[1])]
+    cv2.imwrite("cropped_image.jpg", cropped_image)
+    return cropped_image

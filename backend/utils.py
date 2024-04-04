@@ -41,7 +41,7 @@ def crop_and_collect_images(image_paths: list, column_height):
     all_crop_lists = []  # To collect all crop lists before passing to print_level_image_crop_calculator
 
     for image_path in image_paths:
-        image = cv2.imread(image_path)
+        image = cv2.imdecode(np.fromfile(image_path, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
         image = remove_border_if_exists_filter(image)
         image = appropriate_size_filter(image)
         diff_sum = get_image_attributes(image)
@@ -67,6 +67,7 @@ def crop_and_collect_images(image_paths: list, column_height):
         for crop in print_crop_list:
             cropped_img = image[crop[0]:crop[1], 0:image.shape[1]]
             cropped_images.append(cropped_img)
+            cv2.imwrite(f"cropped_{image_path.split('/')[-1]}", cropped_img)
     return cropped_images
 
 

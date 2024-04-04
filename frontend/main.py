@@ -1,3 +1,5 @@
+import sys
+
 from frontend.manage_frame import ManageFrame
 
 if __name__ == "__main__":
@@ -5,6 +7,7 @@ if __name__ == "__main__":
 
     ctk.set_appearance_mode("Dark")
     ctk.set_default_color_theme("blue")
+    sys.setrecursionlimit(10000)
 
     app = ctk.CTk()
     app.geometry("400x500")
