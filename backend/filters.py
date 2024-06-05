@@ -94,10 +94,10 @@ def remove_border_if_exists_filter(image, offset=7):
 
     contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    # Get the leftmost and rightmost contours
+    if not contours:
+        return image
     leftmost_contour = min(contours, key=lambda c: c[:, 0, 0].min())
     rightmost_contour = max(contours, key=lambda c: c[:, 0, 0].max())
-
     offset_left, offset_right = offset, offset
     lx, ly, lw, lh = cv2.boundingRect(leftmost_contour)
     rx, ry, rw, rh = cv2.boundingRect(rightmost_contour)
