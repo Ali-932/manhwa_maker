@@ -42,8 +42,7 @@ def crop_and_collect_images(image_paths: list, column_height):
 
     for image_path in image_paths:
         image = cv2.imdecode(np.fromfile(image_path, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
-        if len(image.shape) == 2 or image.shape[2] == 1:
-            image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
+        image = check_and_convert_image_format(image)
         image = remove_border_if_exists_filter(image)
         image = appropriate_size_filter(image)
         diff_sum = get_image_attributes(image)
@@ -88,7 +87,8 @@ def place_images_on_canvas(cropped_images, column_height, margin=60):
     images_placed = []
     for index, img in enumerate(cropped_images):
         h, w = img.shape[:2]
-        full_image[current_y:current_y + h, current_x:current_x + w] = img
+        print(img.shape)
+        full_image[current_y:current_y + h, current_x:current_x + w, ] = img
         current_y += h
         if current_y == column_height:
             if current_x == 875:

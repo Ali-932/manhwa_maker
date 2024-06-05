@@ -105,7 +105,20 @@ def remove_border_if_exists_filter(image, offset=7):
         offset_left = 0
     if rx == 0 and rx + rw == image.shape[1]:  # Check for right border
         offset_right = 0
-    if lx == 0 and lx + lw == image.shape[1] and rx == 0 and rx+rw == image.shape[1]:
+    if lx == 0 and lx + lw == image.shape[1] and rx == 0 and rx + rw == image.shape[1]:
         return image
     cropped_image = image[:, max(lx + offset_left, 0):min(rx + rw - offset_right, image.shape[1])]
     return cropped_image
+
+
+def check_and_convert_image_format(image):
+    '''
+    This function checks if the image is in the correct format (RGB) and converts it if necessary.
+    :param image:
+    :return:
+    '''
+    if len(image.shape) == 2 or image.shape[2] == 1:
+        image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
+    elif len(image.shape) == 3 and image.shape[2] == 4:
+        image = cv2.cvtColor(image, cv2.COLOR_BGRA2RGB)
+    return image
