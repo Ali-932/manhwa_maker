@@ -42,6 +42,8 @@ def crop_and_collect_images(image_paths: list, column_height):
 
     for image_path in image_paths:
         image = cv2.imdecode(np.fromfile(image_path, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
+        if len(image.shape) == 2 or image.shape[2] == 1:
+            image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
         image = remove_border_if_exists_filter(image)
         image = appropriate_size_filter(image)
         diff_sum = get_image_attributes(image)
