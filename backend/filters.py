@@ -91,9 +91,10 @@ def remove_border_if_exists_filter(image, offset=7):
 
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     _, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)
-
-    contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
+    try:
+        contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    except Exception:
+        contours = False
     if not contours:
         return image
     leftmost_contour = min(contours, key=lambda c: c[:, 0, 0].min())
