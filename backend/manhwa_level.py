@@ -71,7 +71,7 @@ def get_image_axies(image, diff_sum, y_look_up_start=0):
     :return:
     '''
     y_coordinate_start = get_y_coordinate_start(y_look_up_start, diff_sum)
-    if y_coordinate_start == y_look_up_start:
+    if y_coordinate_start in [y_look_up_start + 5, y_look_up_start - 5]:
         return image.shape[0], y_coordinate_start
     y_coordinate_end = get_y_coordinate_end(image.shape[0], image, y_coordinate_start)
     return y_coordinate_end, y_coordinate_start

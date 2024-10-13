@@ -87,7 +87,6 @@ def place_images_on_canvas(cropped_images, column_height, margin=60):
     images_placed = []
     for index, img in enumerate(cropped_images):
         h, w = img.shape[:2]
-        print(img.shape)
         full_image[current_y:current_y + h, current_x:current_x + w, ] = img
         current_y += h
         if current_y == column_height:

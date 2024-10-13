@@ -1,10 +1,11 @@
-import threading
-
 import cv2
 from PIL import Image
 
 from backend.utils import crop_and_collect_images, place_images_on_canvas, add_margin_for_canvas
+import sys
 
+
+sys.setrecursionlimit(2000)
 
 def manage_images(image_paths: list, column_height=2300):
     image_componenets_lists = crop_and_collect_images(image_paths, column_height=column_height)
