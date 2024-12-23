@@ -91,6 +91,8 @@ class ManageFrame(ctk.CTkFrame):
         image_extensions = ('.jpg', '.jpeg', '.png', '.gif', '.bmp')
         image_paths = []
         for root, dirs, files in os.walk(folder_path):
+            dirs.sort(key=lambda x: int(''.join(filter(str.isdigit, str(x)))))
+            files.sort(key=lambda x: int(''.join(filter(str.isdigit, str(x)))))
             image_paths.extend(
                 os.path.join(root, file)
                 for file in files
